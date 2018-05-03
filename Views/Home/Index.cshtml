@@ -1,0 +1,96 @@
+﻿@{
+    ViewBag.Title = "Página de Inicio";
+    List<string> ficheros = ViewBag.Ficheros as List<string>;
+}
+
+<div class="jumbotron">
+    <hgroup>
+        <h1>PERMISOS SAS AZURE FILE STORAGE</h1>
+        <h3 class="lead">
+            Este proyecto de ejemplo trata sobre permisos SAS en Azure File Storage.
+            Aprenderemos a obtener las claves y cómo acceder a nuestro contenido en Azure.
+        </h3>
+    </hgroup>
+</div>
+
+<div class="margen">
+    <h2>Descripción:</h2>
+    <p>
+        Microsoft Azure Storage es un servicio en la nube administrado por Microsoft que proporciona almacenamiento altamente disponible,
+        seguro, duradero y escalable.
+    </p>
+    <p>
+        Dentro de Microsoft Azure Storage hay diferentes opciones: Blobs, Table, Queue y File. Azure Files ofrece recursos
+        compartidos de archivos en la nube con SSD para conseguir el rendimiento más rápido. Microsoft se encarga del mantenimiento.
+    </p>
+    <p>
+        Azure Files permite configurar recursos compartidos de archivos de red de alta disponibilidad a los que se puede
+        acceder mediante el protocolo Bloque de mensajes del servidor (SMB) estándar. Esto significa que varias máquinas
+        virtuales pueden compartir los mismos archivos con acceso de lectura y escritura.
+    </p>
+</div>
+
+@using (Html.BeginForm("Index", "Home", FormMethod.Post, new { enctype = "multipart/form-data" }))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="margen">
+        <h2>Leer fichero muestra:</h2>
+
+        <div class="form-group">
+            <button type="submit" name="accion" value="muestra" class="btn btn-success">Cargar contenido muestra</button>
+        </div>
+
+        <p>
+            @ViewBag.Texto
+        </p>
+    </div>
+
+    <div class="margen">
+        <h2>Archivos disponibles:</h2>
+        @if (ficheros != null)
+        {
+            <table class="table table-responsive">
+                <thead>
+                    <tr>
+                        <th>NOMBRE</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var s in ficheros)
+                    {
+                        <tr>
+                            <td>@s</td>
+                            @if (s != "ficheromuestra.txt")
+                            {
+                                <td>@Html.ActionLink("Eliminar fichero", "Index", "Home", new { accion = "eliminar", fichero = s }, null)</td>
+                            }
+                            else
+                            {
+                                <td></td>
+                            }
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>No hay elementos disponibles.</p>
+        }
+    </div>
+
+    <div class="margen">
+        <h2>Subir archivo:</h2>
+
+        <div class="form-group">
+            <label for="ficheroSubir">Selecciona un fichero para subirlo a Azure Storage:</label>
+            <input type="file" class="form-control-file" name="ficheroSubir">
+        </div>
+
+        <div class="form-group">
+            <button type="submit" name="accion" value="subir" class="btn btn-primary">Subir fichero</button>
+        </div>
+    </div>
+}
